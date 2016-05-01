@@ -1,5 +1,3 @@
-require 'pry'
-
 def test_number_input(input)
   if input[0] == "."
     input = "0" + input
