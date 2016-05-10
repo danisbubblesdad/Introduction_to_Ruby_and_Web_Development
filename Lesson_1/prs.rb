@@ -17,9 +17,7 @@ loop do
   system 'clear'
   system 'cls'
   puts "::As you show #{CHOICES[user_hand]},\n
-        you see that the computer chose #{CHOICES[computer_hand]}::"
-  puts ""
-  puts ""
+        you see that the computer chose #{CHOICES[computer_hand]}::\n\n\n"
 
   if user_hand == computer_hand
     puts "TIE! You both chose #{CHOICES[user_hand]}"
@@ -29,9 +27,7 @@ loop do
     puts "You lose! #{CHOICES[computer_hand].capitalize} beats #{CHOICES[user_hand]}.. :("
   end
 
-  puts ""
-  puts ""
-  puts "Play again? (y/n)"
+  puts "\n\n\nPlay again? (y/n)"
   break if gets.chomp.downcase != 'y'
   system 'clear'
   system 'cls'
