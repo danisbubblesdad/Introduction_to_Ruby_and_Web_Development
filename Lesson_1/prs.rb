@@ -5,8 +5,6 @@ puts "Paper, Rock, Scissors: THE GAME. V 0.0001"
 puts "An action-packed game fit for all species with fingers and access to a computer terminal."
 
 loop do
-  user_hand = ""
-  computer_hand = ""
   begin
     puts "P, R, or S?"
     user_hand = gets.chomp.downcase
