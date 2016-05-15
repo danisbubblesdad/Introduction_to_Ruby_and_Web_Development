@@ -7,32 +7,32 @@ def initialize_board
   board
 end
 
-def draw_board(b)
-  puts " #{b[1]} | #{b[2]} | #{b[3]} "
+def draw_board(board)
+  puts " #{board[1]} | #{board[2]} | #{board[3]} "
   puts "-----------"
-  puts " #{b[4]} | #{b[5]} | #{b[6]} "
+  puts " #{board[4]} | #{board[5]} | #{board[6]} "
   puts "-----------"
-  puts " #{b[7]} | #{b[8]} | #{b[9]} "
+  puts " #{board[7]} | #{board[8]} | #{board[9]} "
 end
 
-def ask_user_for_square(b)
+def player_turn(board)
   begin
     puts "Choose an available square:"
-    p empty_squares(b)
+    p empty_squares(board)
     square = gets.chomp.to_i
-  end until empty_squares(b).include?(square)
-  b[square] = OPPONENT_MARKERS["Player"]
+  end until empty_squares(board).include?(square)
+  board[square] = OPPONENT_MARKERS["Player"]
 end
 
-def empty_squares(b)
-  b.select {|k, v| v == ' '}.keys
+def empty_squares(board)
+  board.select {|k, v| v == ' '}.keys
 end
 
-def count_number_of_markers_in_line(b, line)
+def count_number_of_markers_in_line(board, line)
   counts = Hash.new 0
   OPPONENT_MARKERS.each do |name, marker|
     line.each do |square|
-      if b[square] == marker
+      if board[square] == marker
         counts[marker] += 1
       end
     end
@@ -40,10 +40,10 @@ def count_number_of_markers_in_line(b, line)
   counts
 end
 
-def find_empty_values_in_line(b, line)
+def find_empty_values_in_line(board, line)
   empty_values = Array.new
   line.each do |square|
-    if b[square] == " "
+    if board[square] == " "
       empty_values << square
     end
   end
@@ -51,44 +51,39 @@ def find_empty_values_in_line(b, line)
 end
 
 def computer_decides_to_block_or_win(winning_options)
-  if winning_options["Computer"]
-    return winning_options["Computer"]
-  elsif winning_options["Player"]
-    return winning_options["Player"]
-  else
-    return nil
-  end
+  winning_options["Computer"] || winning_options["Player"]
 end
 
-def choose_winning_square(b)
+def choose_winning_square(board)
   winning_options = Hash.new
   OPPONENT_MARKERS.each do |name, marker|
     WINNING_LINES.each do |line|
-      if count_number_of_markers_in_line(b, line)[marker] == 2 && count_number_of_markers_in_line(b, line).keys.count == 1
-        winning_options[name] = find_empty_values_in_line(b, line).sample
+      if count_number_of_markers_in_line(board, line)[marker] == 2 && count_number_of_markers_in_line(board, line).keys.count == 1
+        winning_options[name] = find_empty_values_in_line(board, line).sample
       end
     end
   end
   computer_decides_to_block_or_win(winning_options)
 end
 
-def choose_two_in_a_row(b)
+def choose_two_in_a_row(board)
   two_in_a_row_options = Hash.new
   OPPONENT_MARKERS.each do |name, marker|
     WINNING_LINES.each do |line|
-      if count_number_of_markers_in_line(b, line)[marker] == 1 && count_number_of_markers_in_line(b, line).keys.count == 1
-        two_in_a_row_options[name] = find_empty_values_in_line(b, line)
+      if count_number_of_markers_in_line(board, line)[marker] == 1 &&
+        count_number_of_markers_in_line(board, line).keys.count == 1
+        two_in_a_row_options[name] = find_empty_values_in_line(board, line)
       end
     end
   end
   two_in_a_row_options
 end
 
-def computer_chooses_square(b)
-  if choose_winning_square(b)
-    square = choose_winning_square(b)
-  elsif choose_two_in_a_row(b)
-    square = choose_two_in_a_row(b).values.sample
+def computer_chooses_square(board)
+  if choose_winning_square(board)
+    square = choose_winning_square(board)
+  elsif choose_two_in_a_row(board)
+    square = choose_two_in_a_row(board).values.sample
     if square.is_a?(Array)
       square = square.sample
       square
@@ -96,20 +91,20 @@ def computer_chooses_square(b)
       square
     end
   else
-    square = empty_squares(b).sample
+    square = empty_squares(board).sample
   end
-  b[square] = OPPONENT_MARKERS["Computer"]
+  board[square] = OPPONENT_MARKERS["Computer"]
 end
 
-def check_for_winner(b)
+def check_for_winner(board)
   OPPONENT_MARKERS.each do |name, marker|
     WINNING_LINES.each do |line|
-      if count_number_of_markers_in_line(b, line)[marker] == 3
+      if count_number_of_markers_in_line(board, line)[marker] == 3
         return "#{name}"
       end
     end
   end
-  return nil
+  nil
 end
 
 def clear_screen
@@ -138,18 +133,18 @@ def determine_winner(winner)
 end
 
 begin
-clear_screen
-board = initialize_board
-draw_board(board)
+  clear_screen
+  board = initialize_board
+  draw_board(board)
 
   begin
-    ask_user_for_square(board)
+    player_turn(board)
     winner = check_for_winner(board)
     clear_screen
-      if winner
-        draw_board(board)
-        break
-      end
+    if winner
+      draw_board(board)
+      break
+    end
     computer_chooses_square(board)
     draw_board(board)
     winner = check_for_winner(board)
