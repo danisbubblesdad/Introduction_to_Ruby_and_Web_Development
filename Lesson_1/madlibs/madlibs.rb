@@ -1,4 +1,3 @@
-require 'pry'
 dictionary = {
   nouns: ['dog', 'car', 'clown', 'hat'],
   verbs: ['juggl', 'spinn', 'poop'],
