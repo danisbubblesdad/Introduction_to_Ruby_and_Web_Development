@@ -154,31 +154,28 @@ end
 
 clear_screen
 puts "Welcome to Blackjack!"
-# 1. Ask for user name
+
+# Ask for user's name
 player_name = request_player_name
 
-# 2. Deal and display CARDS, but only one dealer card
+# Deal and display cards
 begin
   deck = begin_hand
   initial_deal(deck, player_name, player_hand = Array.new,
                dealer_hand = Array.new)
 
-  # ----- Begin User Turn -----------
-  # 3. Evaluate for natural blackjack, then loop ask to h/s until stand
-  #    requested; on each hit, evaluate for bust
+# Begin player turn
   player_score = player_turn(deck, player_name, player_hand, dealer_hand)
   if player_score.to_i > 21
     sleep(2)
     loading("#{player_name} goes bust!", 2)
   else
 
-  #------- Begin Dealer turn ------------
-  # 4a. Reveal dealer hidden card; evaluate for natural blackjack
-  # 4b. If not natural blackjack, deal dealer cards until dealer reaches >= 17;
-  #     evaluate for dealer bust on each auto-hit
+# Begin dealer turn
     loading("Dealer reveals #{dealer_hand[1][0]} of #{dealer_hand[1][1]}.",2)
     dealer_score = dealer_turn(deck, player_name, player_hand, dealer_hand)
-  # 5. Compare scores and declare winner or push
+
+# Evaluate scores for win/loss/tie
     if dealer_score == 'Natural Blackjack' ||
        player_score == 'Natural Blackjack'
       if dealer_score == player_score
@@ -201,5 +198,6 @@ begin
       loading("Push. #{dealer_score} to #{player_score}.")
     end
   end
-  # 6. Ask to play again
+
+# Ask to play again
 end until ask_to_play_again == "n"
