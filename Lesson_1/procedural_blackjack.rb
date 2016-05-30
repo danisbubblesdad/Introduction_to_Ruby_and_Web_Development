@@ -2,6 +2,11 @@ SUITS = ["Hearts", "Diamonds", "Spades", "Clubs"]
 CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10",
          "Jack", "Queen", "King", "Ace"]
 
+BLACKJACK = 21
+STAY_THRESHOLD = 16
+LOAD_TIME = 3
+
+
 def loading(text, number_of_times)
   number_of_times.times do
     ["#","*","~"].each do |character|
@@ -25,7 +30,7 @@ end
 
 def show_dealer_visible_card(dealer_hand)
   puts "The dealer is showing:"
-  puts "#{dealer_hand[0][0].to_s} of #{dealer_hand[0][1].to_s}."
+  puts "#{dealer_hand[0][0]} of #{dealer_hand[0][1]}."
 end
 
 def display_cards(hand)
@@ -36,35 +41,24 @@ def display_cards(hand)
   formatted_hand
 end
 
-def recalculate_score_with_aces(score, ace_count)
-  loop do
-    if score <= 21
-      return score
-    else
-      if ace_count > 0
-        score -= 10
-        ace_count -= 1
-      else
-        return score
-      end
-    end
-  end
-end
-
 def calculate_score(hand)
+  hand_values = hand.map{ |card| card[0] }
   score = 0
-  ace_count = 0
-  hand.each do |card|
-    if card[0] == "Ace"
+  hand_values.each do |card|
+    if card == "Ace"
       score += 11
-      ace_count += 1
-    elsif card[0].to_i == 0
+    elsif card.to_i == 0
       score += 10
     else
-      score = score + card[0].to_i
+      score += card.to_i
     end
   end
-  recalculate_score_with_aces(score, ace_count)
+
+  hand_values.select{|card| card == "Ace"}.count.times do
+    score -= 10 if score > BLACKJACK
+  end
+
+  score
 end
 
 def show_hand_and_score(name, hand)
@@ -76,7 +70,7 @@ def show_hand_and_score(name, hand)
 end
 
 def initial_deal(deck, player_name, player_hand, dealer_hand)
-  2.times do
+  LOAD_TIME.times do
     player_hand.push(deck.pop)
     dealer_hand.push(deck.pop)
   end
@@ -86,10 +80,10 @@ end
 
 def player_turn(deck, player_name, player_hand, dealer_hand)
   player_score = calculate_score(player_hand)
-  if player_score == 21
+  if player_score == BLACKJACK
     show_dealer_visible_card(dealer_hand)
     show_hand_and_score(player_name, player_hand)
-    sleep(2)
+    sleep(LOAD_TIME)
     return 'Natural Blackjack'
   else
     begin
@@ -101,14 +95,14 @@ def player_turn(deck, player_name, player_hand, dealer_hand)
         show_hand_and_score(player_name, player_hand)
       end
       player_score = calculate_score(player_hand)
-    end until hit_or_stand_response == 's' || player_score > 21
+    end until hit_or_stand_response == 's' || player_score > BLACKJACK
   end
   player_score
 end
 
 def dealer_turn(deck, player_name, player_hand, dealer_hand)
   dealer_score = calculate_score(dealer_hand)
-  if dealer_score == 21
+  if dealer_score == BLACKJACK
     return 'Natural Blackjack'
   else
     begin
@@ -116,7 +110,7 @@ def dealer_turn(deck, player_name, player_hand, dealer_hand)
       show_hand_and_score("Dealer", dealer_hand)
       show_hand_and_score(player_name, player_hand)
       if dealer_score < 17
-        loading("The dealer hits.", 3)
+        loading("The dealer hits.", LOAD_TIME)
         dealer_hand.push(deck.pop)
         clear_screen
         show_hand_and_score("Dealer", dealer_hand)
@@ -126,7 +120,7 @@ def dealer_turn(deck, player_name, player_hand, dealer_hand)
         sleep(3)
       end
       dealer_score = calculate_score(dealer_hand)
-    end until dealer_score > 16
+    end until dealer_score > STAY_THRESHOLD
   end
   dealer_score
 end
@@ -140,7 +134,7 @@ def request_player_name
   puts "\nPlease enter your name:"
   player_name = gets.chomp
   clear_screen
-  loading("Hello, #{player_name}. Let's get started, shall we?", 2)
+  loading("Hello, #{player_name}. Let's get started, shall we?", LOAD_TIME)
   player_name
 end
 
@@ -161,43 +155,44 @@ player_name = request_player_name
 # Deal and display cards
 begin
   deck = begin_hand
-  initial_deal(deck, player_name, player_hand = Array.new,
-               dealer_hand = Array.new)
+  initial_deal(deck, player_name, player_hand = [], dealer_hand = [])
 
 # Begin player turn
   player_score = player_turn(deck, player_name, player_hand, dealer_hand)
-  if player_score.to_i > 21
-    sleep(2)
-    loading("#{player_name} goes bust!", 2)
+  if player_score.to_i > BLACKJACK
+    sleep(LOAD_TIME)
+    loading("#{player_name} goes bust!", LOAD_TIME)
   else
 
 # Begin dealer turn
-    loading("Dealer reveals #{dealer_hand[1][0]} of #{dealer_hand[1][1]}.",2)
+    loading("Dealer reveals #{dealer_hand[1][0]} of #{dealer_hand[1][1]}",
+            LOAD_TIME)
     dealer_score = dealer_turn(deck, player_name, player_hand, dealer_hand)
 
 # Evaluate scores for win/loss/tie
     if dealer_score == 'Natural Blackjack' ||
        player_score == 'Natural Blackjack'
       if dealer_score == player_score
-        loading("Push. The dealer and #{player_name} have the same score.", 2)
+        loading("Push. The dealer and #{player_name} have the same score.",
+                LOAD_TIME)
       elsif dealer_score == 'Natural Blackjack'
-        loading("The dealer wins with a natural blackjack!", 2)
+        loading("The dealer wins with a natural blackjack!", LOAD_TIME)
       else
-        loading("#{player_name} wins with a natural blackjack!", 2)
+        loading("#{player_name} wins with a natural blackjack!", LOAD_TIME)
       end
     elsif dealer_score == player_score
       loading("Push! Both #{player_name} and the dealer have the same score.",
-              2)
-    elsif dealer_score > 21
-      loading("#{player_name} wins! The dealer goes bust..", 2)
+              LOAD_TIME)
+    elsif dealer_score > BLACKJACK
+      loading("#{player_name} wins! The dealer goes bust..", LOAD_TIME)
     elsif player_score > dealer_score
-      loading("#{player_name} wins! #{player_score} to #{dealer_score}.", 2)
+      loading("#{player_name} wins! #{player_score} to #{dealer_score}.",
+              LOAD_TIME)
     elsif dealer_score > player_score
-      loading("The dealer wins. #{dealer_score} to #{player_score}.", 2)
+      loading("The dealer wins. #{dealer_score} to #{player_score}.", LOAD_TIME)
     else
       loading("Push. #{dealer_score} to #{player_score}.")
     end
   end
 
-# Ask to play again
 end until ask_to_play_again == "n"
