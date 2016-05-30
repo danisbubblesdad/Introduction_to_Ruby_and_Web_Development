@@ -108,6 +108,6 @@ x = 4
 
 Answer:
 
-An error will be generated from line 4 (and also line 5 if the program were to
-keep executing). The variable "x" is called but it was never initiated earlier
-in the code. The computer doesn't know what "x" is.
+An error will be generated from line 5 due to a scoping issue. The variable
+"x" is generated inside of the scope of a block, but is later called outside
+of that block, where it is not accessible.
