@@ -54,7 +54,7 @@ def calculate_score(hand)
     end
   end
 
-  hand_values.select{|card| card == "Ace"}.count.times do
+  hand_values.count{|card| card == "Ace"}.times do
     score -= 10 if score > BLACKJACK
   end
 
@@ -70,7 +70,7 @@ def show_hand_and_score(name, hand)
 end
 
 def initial_deal(deck, player_name, player_hand, dealer_hand)
-  LOAD_TIME.times do
+  2.times do
     player_hand.push(deck.pop)
     dealer_hand.push(deck.pop)
   end
@@ -81,6 +81,7 @@ end
 def player_turn(deck, player_name, player_hand, dealer_hand)
   player_score = calculate_score(player_hand)
   if player_score == BLACKJACK
+    loading("#{player_name} is showing a natural blackjack.", LOAD_TIME)
     show_dealer_visible_card(dealer_hand)
     show_hand_and_score(player_name, player_hand)
     sleep(LOAD_TIME)
@@ -103,6 +104,7 @@ end
 def dealer_turn(deck, player_name, player_hand, dealer_hand)
   dealer_score = calculate_score(dealer_hand)
   if dealer_score == BLACKJACK
+    loading("Dealer shows a natural blackjack", LOAD_TIME)
     return 'Natural Blackjack'
   else
     begin
