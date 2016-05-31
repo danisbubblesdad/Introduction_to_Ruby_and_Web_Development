@@ -159,19 +159,19 @@ begin
   deck = begin_hand
   initial_deal(deck, player_name, player_hand = [], dealer_hand = [])
 
-# Begin player turn
+  # Begin player turn
   player_score = player_turn(deck, player_name, player_hand, dealer_hand)
   if player_score.to_i > BLACKJACK
     sleep(LOAD_TIME)
     loading("#{player_name} goes bust!", LOAD_TIME)
   else
 
-# Begin dealer turn
+    # Begin dealer turn
     loading("Dealer reveals #{dealer_hand[1][0]} of #{dealer_hand[1][1]}",
             LOAD_TIME)
     dealer_score = dealer_turn(deck, player_name, player_hand, dealer_hand)
 
-# Evaluate scores for win/loss/tie
+    # Evaluate scores for win/loss/tie
     if dealer_score == 'Natural Blackjack' ||
        player_score == 'Natural Blackjack'
       if dealer_score == player_score
