@@ -1,0 +1,44 @@
+1. How do we create an object in Ruby? Give an example of the creation of an
+object.
+
+A:
+
+Since object are created from classes, they are created by storing class
+instances within variables. IE dan = String.new would create a new variable
+named dan that stores a blank String class.
+
+Additionally, one could create their own class. For example,
+
+class Human
+end
+
+dan = Human.new
+
+This would create a new instance (object) of the Human class named dan.
+
+===============================================================================
+
+
+2. What is a module? What is its purpose? How do we use them with our classes?
+Create a module for the class you created in exercise 1 and include it properly.
+
+A:
+
+A module is used to store and share behaviors across classes. We invoke a
+module by using the "include" reserved word within a class.
+
+Example:
+
+module Say
+  def say(words)
+    puts "=> #{words}."
+  end
+end
+
+class ShoutingWords
+  include say
+end
+
+loud_man = ShoutingWords.new
+
+loud_man.speak("AHHHHHHHHHH")     # => AHHHHHHHHHH
