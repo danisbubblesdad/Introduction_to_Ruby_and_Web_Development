@@ -1,0 +1,33 @@
+2. We have an Oracle class and a RoadTrip class that inherits from the Oracle
+class.
+
+    class Oracle
+      def predict_the_future
+        "You will " + choices.sample
+      end
+
+      def choices
+        ["eat a nice lunch", "take a nap soon", "stay at work late"]
+      end
+    end
+
+    class RoadTrip < Oracle
+      def choices
+        ["visit Vegas", "fly to Fiji", "romp in Rome"]
+      end
+    end
+
+What is the result of the following:
+    trip = RoadTrip.new
+    trip.predict_the_future
+
+======================================================================
+
+==> trip = RoadTrip.new creates a new instance of the RoadTrip class
+==> The RoadTrip class is marked as a child class to the parent Oracle class
+    and, therefore, will have access to all of the methods in the Oracle class.
+==> However, the choices method within the RoadTrip class overwrites the same
+    method name in the Oracle class.
+==> Finally, trip.predict_the_future is able to access the method from the
+    Oracle class. Therefore, the output will be a random string from the
+    choices array within RoadTrip. IE "You will visit Vegas"

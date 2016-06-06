@@ -1,0 +1,29 @@
+
+5. Which of these two classes has an instance variable and how do you know?
+
+class Fruit
+  def initialize(name)
+    name = name
+  end
+end
+
+class Pizza
+  def initialize(name)
+    @name = name
+  end
+end
+
+===========================================================================
+
+The Pizza class has the instance variable @name. The "@" symbol indicates an
+instance variable and the Fruit class does not have this symbol.
+
+We can also instatiate each class and run the "instance_variables" method
+on each instantiation. This method would tell us all instance variables
+are included in the object.
+
+hot_pizza = Pizza.new("cheese")
+hot_pizza.instance_variables ==> [:@name]
+
+orange = Fruit.new("apple")
+orange.instance_variables ==> [] (None)

@@ -1,0 +1,30 @@
+If we have a class such as the one below:
+
+    class Cat
+      @@cats_count = 0
+
+      def initialize(type)
+        @type = type
+        @age  = 0
+        @@cats_count += 1
+      end
+
+      def self.cats_count
+        @@cats_count
+      end
+    end
+
+
+Explain what the @@cats_count variable does and how it works. What code would you need to write to test your theory?
+
+============================================================================
+
+Answer:
+
+cats_count is a class variable that tracks how many times the class has been
+instantiated. Each time a new class object is created, the counter increases
+by one.
+
+I would test my theory in IRB by instantiating X number of classes and then calling the method "cats_count" on the Cat class. IE, Cat.cats_count. The
+value produced in IRB should equal the "X" number of classes that were
+instantiated.

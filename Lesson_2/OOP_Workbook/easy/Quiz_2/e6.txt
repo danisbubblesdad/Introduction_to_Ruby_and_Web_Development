@@ -1,0 +1,25 @@
+6. If I have the following class:
+
+    class Television
+      def self.manufacturer
+        # method logic
+      end
+
+      def model
+        # method logic
+      end
+    end
+
+Question:
+Which one of these is a class method (if any) and how do you know?
+
+Answer:
+We can tell that self.manufacturer is the class method because, in Ruby,
+Class methods start with self.
+
+Question:
+How would you call a class method?
+
+Answer:
+One needs to call the class method on the class name. In the above
+example, the appropriate entry would be Television.manufacturer.

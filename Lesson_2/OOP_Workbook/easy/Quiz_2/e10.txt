@@ -1,0 +1,16 @@
+10. What are the benefits of using Object Oriented Programming in Ruby? Think of
+as many as you can.
+
+
+There are many benefits.
+
+One of the most beneficial items is that OOP allows us to use DRY principles
+more readily. It also allows us to compartmentalize items so that fixes are
+easier to identify and do not need to be made in multiple places.
+
+Another aspect is simply structure and organization.
+The code is much easier to read, debug, and enhance using OOP methodology
+rather than a procedural methodology.
+
+This same organization and structure allows programmers to re-use code in
+different projects. Code becomes much more "bolt on" in OOP vs. Procedural.
