@@ -14,12 +14,12 @@ class Hand
     @value = hand
   end
 
-  def <=>(another_hand)
-    if @value == another_hand.value
+  def <=>(other)
+    if @value == other.value
       0
-    elsif (@value == 'p' && another_hand.value == 'r') ||
-          (@value == 'r' && another_hand.value == 's') ||
-          (@value == 's' && another_hand.value == 'p')
+    elsif (@value == 'p' && other.value == 'r') ||
+          (@value == 'r' && other.value == 's') ||
+          (@value == 's' && other.value == 'p')
       1
     else
       -1
@@ -55,10 +55,11 @@ end
 
 class Human < Player
   def pick_hand
-    begin
+    loop do
       puts 'P, R, or S?'
       hand = gets.chomp.downcase
-    end until Game::CHOICES.keys.include?(hand)
+      break if Game::CHOICES.keys.include?(hand)
+    end
     self.hand = Hand.new(hand)
   end
 end
