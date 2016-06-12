@@ -1,3 +1,10 @@
+module Clearable
+  def clear_screen
+    system 'clear'
+    system 'cls'
+  end
+end
+
 class Hand
   include Comparable
 
@@ -58,6 +65,7 @@ end
 
 class Game
   CHOICES = { 'p' => 'paper', 'r' => 'rock', 's' => 'scissors' }.freeze
+  include Clearable
 
   attr_reader :user, :computer
 
@@ -81,12 +89,16 @@ class Game
   def play
     user.pick_hand
     computer.pick_hand
+    clear_screen
     compare_hands
   end
 end
 
-begin
+loop do
+  include Clearable
+  clear_screen
   Game.new.play
-  puts 'Would you like to play again? (y/n)'
+  puts "\n\nWould you like to play again? (y/n)"
   response = gets.chomp
-end until response.casecmp('n') == 0
+  break if response.casecmp('n') == 0
+end
