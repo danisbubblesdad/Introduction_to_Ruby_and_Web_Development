@@ -1,3 +1,4 @@
+# :nodoc:
 module Clearable
   def clear_screen
     system 'clear'
@@ -5,7 +6,10 @@ module Clearable
   end
 end
 
+# :nodoc:
 class Hand
+  WINS = { 'p' => 'r', 'r' => 's', 's' => 'p' }.freeze
+
   include Comparable
 
   attr_reader :value
@@ -15,11 +19,9 @@ class Hand
   end
 
   def <=>(other)
-    if @value == other.value
+    if value == other.value
       0
-    elsif (@value == 'p' && other.value == 'r') ||
-          (@value == 'r' && other.value == 's') ||
-          (@value == 's' && other.value == 'p')
+    elsif WINS[value] == other.value
       1
     else
       -1
@@ -27,7 +29,7 @@ class Hand
   end
 
   def display_winning_message
-    case @value
+    case value
     when 'p'
       puts 'Paper wraps Rock!'
     when 'r'
@@ -38,6 +40,7 @@ class Hand
   end
 end
 
+# :nodoc:
 class Player
   attr_accessor :hand
   attr_reader :name
@@ -47,23 +50,25 @@ class Player
   end
 end
 
+# :nodoc:
 class Computer < Player
   def pick_hand
     self.hand = Hand.new(Game::CHOICES.keys.sample)
   end
 end
 
+# :nodoc:
 class Human < Player
   def pick_hand
-    loop do
+    begin
       puts 'P, R, or S?'
       hand = gets.chomp.downcase
-      break if Game::CHOICES.keys.include?(hand)
-    end
+    end until Game::CHOICES.keys.include?(hand)
     self.hand = Hand.new(hand)
   end
 end
 
+# :nodoc:
 class Game
   CHOICES = { 'p' => 'paper', 'r' => 'rock', 's' => 'scissors' }.freeze
   include Clearable
